@@ -4,14 +4,29 @@ use dioxus::{desktop::Config, prelude::LaunchBuilder};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = DiceArgs::parse();
-    if let Some(webapp) = args.launch_webapp {
-        match webapp {
+    if let Some(app) = args.launch_app {
+        match app {
             true => {
                 LaunchBuilder::desktop()
                     .with_cfg(
                         Config::new()
                             .with_background_color((30, 30, 46, 255))
-                            .with_menu(None),
+                            .with_menu(None)
+                            // disable on release builds
+                            .with_disable_context_menu(!cfg!(debug_assertions))
+                            .with_custom_index(
+                                r#"<!DOCTYPE html>
+                                    <html>
+                                        <head>
+                                            <title>Dioxus app</title>
+                                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                            <link rel="stylesheet" href="public/tailwind.css">
+                                        </head>
+                                        <body>
+                                            <div id="main" style="height: 100vh;"></div>
+                                        </body>
+                                    </html>"#.to_string(),
+                        ),
                     )
                     .launch(App);
                 Ok(())

@@ -36,6 +36,6 @@ pub struct DiceArgs {
     #[command(subcommand)]
     pub command: Option<DiceSubcommand>,
 
-    #[arg(long, short = 'w', default_value = "false")]
-    pub launch_webapp: Option<bool>,
+    #[arg(long, short = 'l', default_value = "false")]
+    pub launch_app: Option<bool>,
 }
